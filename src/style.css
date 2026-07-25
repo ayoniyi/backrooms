@@ -406,7 +406,7 @@ html, body {
   }
   #dpad {
     bottom: 5px;
-    left: 80%;
+    left: 50%;
   }
   .dpad-btn {
     width: 48px;
