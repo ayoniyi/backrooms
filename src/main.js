@@ -275,7 +275,7 @@ gltfLoader.load(
     if (xhr.total) {
       const pct = Math.round((xhr.loaded / xhr.total) * 100);
       progressBar.style.width = `${pct}%`;
-      loadingText.textContent = `Loading building model… ${pct}%`;
+      loadingText.textContent = `Loading models… ${pct}%`;
     }
   },
   (error) => {
@@ -317,7 +317,7 @@ function snapToFloor() {
    LOAD CAVEMAN CUTOUT MODEL
    ========================================================================= */
 function loadCutoutModel() {
-  loadingText.textContent = 'Loading caveman cutout model…';
+  loadingText.textContent = 'Loading "that" model…';
   gltfLoader.load(
     CUTOUT_MODEL_URL,
     (gltf) => {
@@ -411,7 +411,7 @@ function loadCutoutModel() {
     (xhr) => {
       if (xhr.total) {
         const pct = Math.round((xhr.loaded / xhr.total) * 100);
-        loadingText.textContent = `Loading caveman model… ${pct}%`;
+        loadingText.textContent = `Loading "that" model… ${pct}%`;
       }
     },
     (error) => {

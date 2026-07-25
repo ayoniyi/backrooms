@@ -57,7 +57,6 @@ my_backrooms/
 | **A** / **Left Arrow** | Turn Camera Left (Yaw) |
 | **D** / **Right Arrow** | Turn Camera Right (Yaw) |
 | **Continue Button** | Dismiss controls modal & start/resume exploration |
-| **Pause Button (⏸)** | Open controls modal & pause active movement |
 | **Shift** | Sprint (boosts movement speed) |
 | **Space** | Jump (or Fly Up in No-Clip mode) |
 | **C** | Fly Down (No-Clip mode only) |
