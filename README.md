@@ -56,45 +56,54 @@ my_backrooms/
 | **S** / **Down Arrow** | Move Backward |
 | **A** / **Left Arrow** | Turn Camera Left (Yaw) |
 | **D** / **Right Arrow** | Turn Camera Right (Yaw) |
-| **Mouse (Cursor)** | Subtle horizontal look panning (dampened sensitivity; vertical looking locked) |
+| **Continue Button** | Dismiss controls modal & start/resume exploration |
+| **Pause Button (⏸)** | Open controls modal & pause active movement |
 | **Shift** | Sprint (boosts movement speed) |
 | **Space** | Jump (or Fly Up in No-Clip mode) |
 | **C** | Fly Down (No-Clip mode only) |
 | **N** | Toggle No-Clip Fly Mode (displays live X, Y, Z coordinates for spawn tuning) |
-| **Esc** | Pause / Release pointer lock |
+| **Esc** | Toggle Pause / Controls screen |
+
+*Note: Cursor/mouse look around action is disabled entirely. Camera orientation is controlled via keyboard turning inputs or the touch D-pad.*
 
 ### Mobile & Small Screen Controls (≤ 1024px)
-On mobile devices and screen widths ≤ 1024px, an on-screen **Glassmorphic D-pad** appears automatically:
-- **Forward Arrow**: Walk forward
-- **Backward Arrow**: Walk backward
-- **Left Arrow**: Turn camera left
-- **Right Arrow**: Turn camera right
+On mobile devices and smaller screen sizes:
+- **Continue Button**: Added to the controls modal so users can easily dismiss the modal and enter/resume exploration on touch and small screens.
+- **Floating Pause Button (⏸)**: Positioned at the top-right corner to open the controls modal whenever inactive.
+- **Glassmorphic D-pad**: Appears automatically at the bottom of the screen:
+  - **Forward Arrow**: Walk forward
+  - **Backward Arrow**: Walk backward
+  - **Left Arrow**: Turn camera left
+  - **Right Arrow**: Turn camera right
 - **Active State Highlights**: Buttons provide visual feedback when pressed/touched.
-- **Tap to Explore Overlay**: Seamless mobile launch bypassing pointer lock constraints.
 
 ---
 
 ## ⚙️ Key Technical Features
 
-### 1. Locked Vertical Camera & Keyboard Turning
-- Mouse input is restricted to subtle horizontal look panning (`MOUSE_SENSITIVITY = 0.15`), with vertical pitch (`movementY`) locked to 0.
-- Camera rotation (Yaw) is driven directly by **A / D** and **Left / Right Arrow** keys.
+### 1. Disabled Mouse Look & Keyboard Turning
+- Mouse look around action is disabled entirely in the capture phase.
+- Camera rotation (Yaw) is driven strictly by **A / D** and **Left / Right Arrow** keys (or touch D-pad on mobile).
 - Automatic pitch leveling resets any pitch offset when moving forward or backward.
 
-### 2. Collision System & Physics
+### 2. Controls Modal & Pause Architecture
+- Integrated **Continue** button inside `#instructions` modal to allow immediate dismissal on all screen sizes (including smaller viewports where clicking overlay background might fail).
+- In-game floating **Pause** button allows opening/closing the controls modal on demand.
+
+### 3. Collision System & Physics
 - **Wall Collision**: Raycasts in 8 horizontal directions at knee and waist heights prevent clipping through environment walls and allow smooth wall sliding.
 - **Stair & Ledge Climbing**: Downward ground-detection raycast allows walking up stairs and small obstacles up to `MAX_STEP_UP` height smoothly.
 - **Gravity & Jump**: Integrated vertical velocity physics with jump reset upon grounding.
 - **Safety Respawn Net**: Automatically respawns player at start coordinates if dropped out of bounds (`Y < -60`).
 
-### 3. Dynamic Secret Model Placement & Toast Discovery
+### 4. Dynamic Secret Model Placement & Toast Discovery
 - Asynchronously loads `backrooms_movie_caveman_cutout.glb` and uses random floor sampling to place the model in a valid, unblocked room location.
 - Triggers a styled UI discovery toast (*"🗿 You found the Caveman Cutout!"*) upon player proximity or collision.
 
-### 4. No-Clip Fly Mode
+### 5. No-Clip Fly Mode
 - Pressing **N** toggles No-Clip mode, allowing free flying through walls to inspect room layouts and discover exact `START_X`, `START_Y`, `START_Z` coordinates via an on-screen HUD.
 
-### 5. Performance Optimizations
+### 6. Performance Optimizations
 - Pre-allocated `THREE.Vector3` objects in hot execution paths to prevent garbage collection frame drops.
 - Squared-distance calculations (`dx * dx + dz * dz`) for fast cylinder collision and proximity detection without square-root overhead.
 - Optimized 8-direction raycasting array for lightweight collision checks across all frames.
@@ -116,6 +125,5 @@ const SPRINT_MULTIPLIER = 1.8; // Sprint speed multiplier
 const JUMP_SPEED = 6;          // Jump velocity
 const GRAVITY = -20;           // Downward gravity acceleration
 const MAX_STEP_UP = 0.45;      // Max walkable stair/step height
-const MOUSE_SENSITIVITY = 0.15;// Mouse horizontal look dampening factor
 const TURN_SPEED = 1.8;        // Keyboard rotation speed (rad/s)
 ```

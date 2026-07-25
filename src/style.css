@@ -62,20 +62,25 @@ html, body {
   display: none; /* toggled to flex from main.js */
   position: fixed;
   inset: 0;
-  background: rgba(8, 8, 12, 0.7);
+  background: rgba(8, 8, 12, 0.75);
   align-items: center;
   justify-content: center;
   z-index: 20;
-  cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 #instructions {
   text-align: center;
   color: #fff;
-  padding: 30px 44px;
-  background: rgba(18, 18, 24, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  padding: 28px 36px;
+  background: rgba(18, 18, 24, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  max-width: 90vw;
+  width: 360px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
 }
 
 #instructions h1 {
@@ -95,10 +100,12 @@ html, body {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   text-align: left;
   font-size: 13px;
-  line-height: 1.9;
+  line-height: 1.8;
   color: #cfd2d8;
 }
 
@@ -106,6 +113,77 @@ html, body {
   display: inline-block;
   min-width: 70px;
   color: #fff;
+}
+
+.modal-btn {
+  display: inline-block;
+  width: 100%;
+  margin-top: 22px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4f74ff 0%, #3553cc 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(79, 116, 255, 0.35);
+  transition: all 0.15s ease;
+  letter-spacing: 0.02em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modal-btn:hover {
+  background: linear-gradient(135deg, #6083ff 0%, #4060df 100%);
+  box-shadow: 0 6px 22px rgba(79, 116, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.modal-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(79, 116, 255, 0.3);
+}
+
+/* ---------- In-game Pause button ---------- */
+.pause-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 25;
+  display: none; /* toggled to flex in main.js when game is active */
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(18, 18, 28, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  color: #e0e4f0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pause-btn:hover {
+  background: rgba(30, 32, 48, 0.9);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  transform: scale(1.04);
+}
+
+.pause-btn:active {
+  transform: scale(0.96);
+}
+
+.pause-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
 }
 
 /* ---------- Crosshair ---------- */

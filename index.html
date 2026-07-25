@@ -17,22 +17,28 @@
     </div>
   </div>
 
-  <!-- Shown whenever pointer lock is NOT active (start + after Esc) -->
+  <!-- Shown whenever controls modal is active (start + after Esc / Pause) -->
   <div id="blocker">
     <div id="instructions">
       <h1>BACKROOMS</h1>
-      <p>Click to start</p>
+      <p>Controls & Exploration</p>
       <ul>
         <li><strong>W / S</strong> — move forward / back</li>
         <li><strong>A / D</strong> — look left / right</li>
-        <li><strong>Mouse</strong> — look around</li>
         <li><strong>Shift</strong> — sprint</li>
         <li><strong>Space</strong> — jump</li>
         <!-- <li><strong>N</strong> — no-clip fly (find spawn coords)</li> -->
-        <li><strong>Esc</strong> — controls screen</li>
+        <li><strong>Esc</strong> — toggle pause / controls screen</li>
       </ul>
+      <button id="continue-btn" class="modal-btn" aria-label="Continue Exploration">Continue</button>
     </div>
   </div>
+
+  <!-- In-game pause button (shown when modal is inactive) -->
+  <button id="pause-btn" class="pause-btn" aria-label="Pause Controls">
+    <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+    <span>Pause</span>
+  </button>
 
   <div id="crosshair"></div>
 

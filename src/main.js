@@ -78,29 +78,25 @@ sun.shadow.bias = -0.0005;
 scene.add(sun);
 
 /* =========================================================================
-   POINTER LOCK CONTROLS (mouse look) + reduced sensitivity
+   POINTER LOCK CONTROLS (mouse look disabled entirely)
    ========================================================================= */
 const controls = new PointerLockControls(camera, document.body);
 scene.add(controls.getObject());
 
-// Intercept mousemove in capture phase — fires BEFORE PointerLockControls'
-// own listener — scale down horizontal movementX and block vertical looking (movementY = 0).
+// Disable cursor/mouse look around action entirely by intercepting mousemove in capture phase
 document.addEventListener(
   'mousemove',
   (e) => {
-    if (!controls.isLocked) return;
-    Object.defineProperties(e, {
-      movementX: { value: e.movementX * MOUSE_SENSITIVITY, configurable: true },
-      movementY: { value: 0, configurable: true },
-    });
-    // Keep camera pitch completely horizontal
-    camera.rotation.x = 0;
+    e.stopImmediatePropagation();
+    camera.rotation.x = 0; // keep camera pitch level
   },
   true  // capture phase
 );
 
 const blocker = document.getElementById('blocker');
 const instructions = document.getElementById('instructions');
+const continueBtn = document.getElementById('continue-btn');
+const pauseBtn = document.getElementById('pause-btn');
 const crosshair = document.getElementById('crosshair');
 const loadingScreen = document.getElementById('loading-screen');
 const progressBar = document.getElementById('progress-bar');
@@ -121,18 +117,48 @@ function triggerCutoutDiscovery() {
   }, 4500);
 }
 
-instructions.addEventListener('click', () => controls.lock());
+function resumeGame() {
+  blocker.style.display = 'none';
+  if (pauseBtn) pauseBtn.style.display = 'flex';
+  if (crosshair) crosshair.style.display = 'block';
+  if (!isMobile && !controls.isLocked) {
+    controls.lock();
+  }
+}
+
+function pauseGame() {
+  blocker.style.display = 'flex';
+  if (pauseBtn) pauseBtn.style.display = 'none';
+  if (crosshair) crosshair.style.display = 'none';
+  if (!isMobile && controls.isLocked) {
+    controls.unlock();
+  }
+}
+
+if (continueBtn) {
+  continueBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    resumeGame();
+  });
+}
+
+if (pauseBtn) {
+  pauseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    pauseGame();
+  });
+}
 
 controls.addEventListener('lock', () => {
   blocker.style.display = 'none';
-  crosshair.style.display = 'block';
+  if (pauseBtn) pauseBtn.style.display = 'flex';
+  if (crosshair) crosshair.style.display = 'block';
 });
 
 controls.addEventListener('unlock', () => {
-  if (!isMobile) {
-    blocker.style.display   = 'flex';
-    crosshair.style.display = 'none';
-  }
+  blocker.style.display = 'flex';
+  if (pauseBtn) pauseBtn.style.display = 'none';
+  if (crosshair) crosshair.style.display = 'none';
 });
 
 /* =========================================================================
@@ -608,10 +634,8 @@ const isMobile = window.matchMedia('(max-width: 1024px)').matches;
   });
 })();
 
-// Mobile-only: suppress pointer-lock blocker & add tap-to-start
+// Mobile-only: add tap-to-start overlay
 if (isMobile) {
-  controls.addEventListener('unlock', () => { /* no-op — dpad drives movement */ });
-
   const mobileStart = document.createElement('div');
   mobileStart.id    = 'mobile-start';
   mobileStart.innerHTML =
@@ -620,8 +644,7 @@ if (isMobile) {
 
   mobileStart.addEventListener('click', () => {
     mobileStart.style.display = 'none';
-    crosshair.style.display   = 'block';
-    blocker.style.display     = 'none';
+    resumeGame();
   }, { once: true });
 }
 
