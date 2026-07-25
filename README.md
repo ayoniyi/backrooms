@@ -1,85 +1,121 @@
-# Building Walkthrough (Three.js + Vite, vanilla JS)
+# Backrooms 3D Environment
 
-A first-person, FPS-style walkthrough of a `.glb` building model: mouse-look,
-WASD movement, sprinting, jumping, gravity, and wall/floor collision so you
-can't walk through walls and can climb stairs.
+A first-person 3D Backrooms web experience built with **Three.js**, **Vite**, and **Vanilla JavaScript**. 
 
-## Setup
+Features real-time GLTF/Draco model rendering, realistic lighting and fog, wall collision detection, floor snapping, secret object discovery, keyboard turning, locked vertical view, and full mobile support with interactive touch D-pad controls.
 
-```bash
-npm install
+---
+
+## 🚀 Setup & Running
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Start dev server:**
+   ```bash
+   npm run dev
+   ```
+   Open the local server URL (e.g., `http://localhost:5173`) in your web browser.
+
+3. **Build for production:**
+   ```bash
+   npm run build
+   npm run preview
+   ```
+
+---
+
+## 📂 Project Structure
+
+```
+my_backrooms/
+├── public/
+│   └── models/
+│       ├── backrooms_vr.glb                  # Primary 3D environment model
+│       ├── backrooms_movie_caveman_cutout.glb # Secret collectible model
+│       └── ...
+├── src/
+│   ├── main.js                               # Core scene setup, game loop, physics & controls
+│   └── style.css                             # Glassmorphism UI, mobile D-pad, loading & toast styles
+├── index.html                                # Main HTML shell & UI overlays
+├── package.json
+└── vite.config.js
 ```
 
-Drop your building model at:
+---
 
-```
-public/model/building.glb
-```
+## 🎮 Controls
 
-(Change `MODEL_URL` at the top of `src/main.js` if you want a different path.)
+### Desktop Controls
 
-```bash
-npm run dev
-```
+| Input | Action |
+| :--- | :--- |
+| **W** / **Up Arrow** | Move Forward (in facing direction; auto-levels camera pitch) |
+| **S** / **Down Arrow** | Move Backward |
+| **A** / **Left Arrow** | Turn Camera Left (Yaw) |
+| **D** / **Right Arrow** | Turn Camera Right (Yaw) |
+| **Mouse (Cursor)** | Subtle horizontal look panning (dampened sensitivity; vertical looking locked) |
+| **Shift** | Sprint (boosts movement speed) |
+| **Space** | Jump (or Fly Up in No-Clip mode) |
+| **C** | Fly Down (No-Clip mode only) |
+| **N** | Toggle No-Clip Fly Mode (displays live X, Y, Z coordinates for spawn tuning) |
+| **Esc** | Pause / Release pointer lock |
 
-Open the printed localhost URL, click "Click to look around" to enter
-pointer-lock mode, and walk around with WASD + mouse.
+### Mobile & Small Screen Controls (≤ 1024px)
+On mobile devices and screen widths ≤ 1024px, an on-screen **Glassmorphic D-pad** appears automatically:
+- **Forward Arrow**: Walk forward
+- **Backward Arrow**: Walk backward
+- **Left Arrow**: Turn camera left
+- **Right Arrow**: Turn camera right
+- **Active State Highlights**: Buttons provide visual feedback when pressed/touched.
+- **Tap to Explore Overlay**: Seamless mobile launch bypassing pointer lock constraints.
 
-## Controls
+---
 
-| Input          | Action           |
-|----------------|------------------|
-| W / A / S / D  | Move             |
-| Mouse          | Look around      |
-| Shift          | Sprint           |
-| Space          | Jump             |
-| Esc            | Release cursor   |
+## ⚙️ Key Technical Features
 
-## How it works
+### 1. Locked Vertical Camera & Keyboard Turning
+- Mouse input is restricted to subtle horizontal look panning (`MOUSE_SENSITIVITY = 0.15`), with vertical pitch (`movementY`) locked to 0.
+- Camera rotation (Yaw) is driven directly by **A / D** and **Left / Right Arrow** keys.
+- Automatic pitch leveling resets any pitch offset when moving forward or backward.
 
-- **Look**: `PointerLockControls` from `three/examples/jsm` locks the cursor
-  and maps mouse movement to camera rotation — the standard FPS-camera setup.
-- **Move**: WASD sets a desired direction each frame; `controls.moveForward`
-  / `controls.moveRight` apply it relative to where the camera is facing.
-- **Wall collision**: before committing a move, a ring of raycasts is fired
-  outward from the player at two heights (waist + knee) with `far` set to
-  the player's radius. If any ray hits a wall within that radius, that axis
-  of movement is reverted — this is what lets you slide along walls instead
-  of getting stuck when approaching them diagonally.
-- **Floor / gravity**: a ray is cast straight down from just above the
-  player's feet each frame. Gravity is integrated normally, and when the
-  player's feet reach the detected ground, vertical velocity resets and
-  jumping is re-enabled. Casting from slightly above the feet (see
-  `MAX_STEP_UP`) is what lets you walk up small steps/stairs smoothly
-  instead of colliding with the front of each step.
-- **Multi-room / multi-floor**: since collision is derived directly from the
-  model's own geometry (every mesh is pushed into `collidables`), this works
-  for any room layout or floor count without manual boundary setup — as
-  long as rooms are connected by walkable geometry (doorways, stairs, ramps).
+### 2. Collision System & Physics
+- **Wall Collision**: Raycasts in 8 horizontal directions at knee and waist heights prevent clipping through environment walls and allow smooth wall sliding.
+- **Stair & Ledge Climbing**: Downward ground-detection raycast allows walking up stairs and small obstacles up to `MAX_STEP_UP` height smoothly.
+- **Gravity & Jump**: Integrated vertical velocity physics with jump reset upon grounding.
+- **Safety Respawn Net**: Automatically respawns player at start coordinates if dropped out of bounds (`Y < -60`).
 
-## Tuning
+### 3. Dynamic Secret Model Placement & Toast Discovery
+- Asynchronously loads `backrooms_movie_caveman_cutout.glb` and uses random floor sampling to place the model in a valid, unblocked room location.
+- Triggers a styled UI discovery toast (*"🗿 You found the Caveman Cutout!"*) upon player proximity or collision.
 
-All the key constants are at the top of `src/main.js`:
+### 4. No-Clip Fly Mode
+- Pressing **N** toggles No-Clip mode, allowing free flying through walls to inspect room layouts and discover exact `START_X`, `START_Y`, `START_Z` coordinates via an on-screen HUD.
 
-- `START_X` / `START_Z` — spawn position (XZ). Match this to your building's
-  entrance; the player is dropped from above and snapped onto the floor on load.
-- `PLAYER_HEIGHT`, `PLAYER_RADIUS` — the player's "capsule" size.
-- `MOVE_SPEED`, `SPRINT_MULTIPLIER`, `JUMP_SPEED`, `GRAVITY` — movement feel.
-- `MAX_STEP_UP` — largest ledge height the player can walk up without jumping.
+### 5. Performance Optimizations
+- Pre-allocated `THREE.Vector3` objects in hot execution paths to prevent garbage collection frame drops.
+- Squared-distance calculations (`dx * dx + dz * dz`) for fast cylinder collision and proximity detection without square-root overhead.
+- Optimized 8-direction raycasting array for lightweight collision checks across all frames.
 
-## Performance note
+---
 
-Collision raycasts run against every mesh in the model directly. For a
-simple/medium building this is fine. For a very high-poly model, consider:
+## 🛠️ Configuration & Tuning
 
-- Using simplified invisible "collision-only" meshes exported alongside the
-  visual ones (push only those into `collidables`), or
-- Adding [`three-mesh-bvh`](https://github.com/gkjohnson/three-mesh-bvh) to
-  accelerate raycasts against the real geometry.
+Configuration constants can be adjusted at the top of `src/main.js`:
 
-## Build for production
-
-```bash
-npm run build
-npm run preview
+```javascript
+const START_X = 0;             // Spawn X position
+const START_Y = 1.7;           // Spawn Y position
+const START_Z = 5;             // Spawn Z position
+const PLAYER_HEIGHT = 1.7;     // Eye height in meters
+const PLAYER_RADIUS = 0.35;    // Player collision width radius
+const MOVE_SPEED = 4.0;        // Base walking speed (m/s)
+const SPRINT_MULTIPLIER = 1.8; // Sprint speed multiplier
+const JUMP_SPEED = 6;          // Jump velocity
+const GRAVITY = -20;           // Downward gravity acceleration
+const MAX_STEP_UP = 0.45;      // Max walkable stair/step height
+const MOUSE_SENSITIVITY = 0.15;// Mouse horizontal look dampening factor
+const TURN_SPEED = 1.8;        // Keyboard rotation speed (rad/s)
 ```
