@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BACKROOMS</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- Shown while the .glb is downloading -->
+  <div id="loading-screen">
+    <div class="loading-box">
+      <p id="loading-text">Loading building model…</p>
+      <div class="progress-track"><div id="progress-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- Shown whenever pointer lock is NOT active (start + after Esc) -->
+  <div id="blocker">
+    <div id="instructions">
+      <h1>BACKROOMS</h1>
+      <p>Click to start</p>
+      <ul>
+        <li><strong>W / S</strong> — move forward / back</li>
+        <li><strong>A / D</strong> — look left / right</li>
+        <li><strong>Mouse</strong> — look around</li>
+        <li><strong>Shift</strong> — sprint</li>
+        <li><strong>Space</strong> — jump</li>
+        <!-- <li><strong>N</strong> — no-clip fly (find spawn coords)</li> -->
+        <li><strong>Esc</strong> — controls screen</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="crosshair"></div>
+
+  <!-- Toast notification when player encounters the caveman cutout -->
+  <div id="cutout-toast">🗿 You found the Caveman Cutout!</div>
+
+  <!-- Shown only in no-clip fly mode (press N) — live coordinate readout -->
+  <pre id="debug-hud"></pre>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
