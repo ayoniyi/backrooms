@@ -838,8 +838,8 @@ const isMobile = window.matchMedia("(max-width: 1024px)").matches;
       <button class="dpad-btn" id="dpad-left" aria-label="Turn Left">
         <svg viewBox="0 0 24 24"><polyline points="19 12 5 12"/><polyline points="12 5 5 12 12 19"/></svg>
       </button>
-      <button class="dpad-btn dpad-center" id="dpad-center" aria-label="Center" disabled>
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>
+      <button class="dpad-btn dpad-center" id="dpad-center" aria-label="Talk (T)">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       </button>
       <button class="dpad-btn" id="dpad-right" aria-label="Turn Right">
         <svg viewBox="0 0 24 24"><polyline points="5 12 19 12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -858,11 +858,19 @@ const isMobile = window.matchMedia("(max-width: 1024px)").matches;
     "dpad-back": "backward",
     "dpad-left": "turnLeft",
     "dpad-right": "turnRight",
+    "dpad-center": "talk",
   };
 
   function setDpadKey(btnId, isDown) {
     const key = dpadMap[btnId];
     if (!key) return;
+    if (key === "talk") {
+      document.getElementById(btnId)?.classList.toggle("active", isDown);
+      if (isDown && isGameActive) {
+        triggerTalk();
+      }
+      return;
+    }
     keys[key] = isDown;
     document.getElementById(btnId)?.classList.toggle("active", isDown);
   }
