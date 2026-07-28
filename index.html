@@ -1,53 +1,65 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BACKROOMS</title>
-  <link rel="stylesheet" href="/src/style.css" />
-</head>
-<body>
-  <div id="app"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BACKROOMS</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="icon" type="image/png" href="/assets/icon.png" />
+  </head>
+  <body>
+    <div id="app"></div>
 
-  <!-- Shown while the .glb is downloading -->
-  <div id="loading-screen">
-    <div class="loading-box">
-      <p id="loading-text">Loading backrooms...</p>
-      <div class="progress-track"><div id="progress-bar"></div></div>
+    <!-- Shown while the .glb is downloading -->
+    <div id="loading-screen">
+      <div class="loading-box">
+        <p id="loading-text">Loading backrooms...</p>
+        <div class="progress-track"><div id="progress-bar"></div></div>
+      </div>
     </div>
-  </div>
 
-  <!-- Shown whenever controls modal is active (start + after Esc / Pause) -->
-  <div id="blocker">
-    <div id="instructions">
-      <h1>BACKROOMS</h1>
-      <p>Controls & Exploration</p>
-      <ul>
-        <li><strong>W / S</strong> — move forward / back</li>
-        <li><strong>A / D</strong> — look left / right</li>
-        <li><strong>Shift</strong> — sprint</li>
-        <li><strong>Space</strong> — jump</li>
-        <!-- <li><strong>N</strong> — no-clip fly (find spawn coords)</li> -->
-        <li><strong>Esc</strong> — toggle pause / controls screen</li>
-      </ul>
-      <button id="continue-btn" class="modal-btn" aria-label="Continue Exploration">Continue</button>
+    <!-- Shown whenever controls modal is active (start + after Esc / Pause) -->
+    <div id="blocker">
+      <div id="instructions">
+        <h1>BACKROOMS</h1>
+        <p>Controls & Exploration</p>
+        <ul>
+          <li>
+            <strong>W / S (Arrow Keys Up/Down)</strong> — move forward / back
+          </li>
+          <li>
+            <strong>A / D (Arrow Keys Left/Right)</strong> — look left / right
+          </li>
+          <li><strong>Shift</strong> — sprint</li>
+          <li><strong>Space</strong> — jump</li>
+          <li><strong>T</strong> — talk</li>
+          <!-- <li><strong>N</strong> — no-clip fly (find spawn coords)</li> -->
+          <li><strong>Esc</strong> — toggle pause / controls screen</li>
+        </ul>
+        <button
+          id="continue-btn"
+          class="modal-btn"
+          aria-label="Continue Exploration"
+        >
+          Continue
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- In-game pause button (shown when modal is inactive) -->
-  <button id="pause-btn" class="pause-btn" aria-label="Pause Controls">
-    <!-- <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> -->
-    <span>Controls</span>
-  </button>
+    <!-- In-game pause button (shown when modal is inactive) -->
+    <button id="pause-btn" class="pause-btn" aria-label="Pause Controls">
+      <!-- <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> -->
+      <span>Controls</span>
+    </button>
 
-  <div id="crosshair"></div>
+    <!-- <div id="crosshair"></div> -->
 
-  <!-- Toast notification when player encounters the caveman cutout -->
-  <div id="cutout-toast">🗿 You found the Caveman Cutout!</div>
+    <!-- Subtitle toast notification for talk & response audio -->
+    <div id="subtitle-toast" class="subtitle-toast"></div>
 
-  <!-- Shown only in no-clip fly mode (press N) — live coordinate readout -->
-  <pre id="debug-hud"></pre>
+    <!-- Shown only in no-clip fly mode (press N) — live coordinate readout -->
+    <pre id="debug-hud"></pre>
 
-  <script type="module" src="/src/main.js"></script>
-</body>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
